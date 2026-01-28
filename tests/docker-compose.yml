@@ -67,21 +67,18 @@ services:
       start_period: 10s
 
   keycloak:
-    image: gitlab-registry.mpcdf.mpg.de/nomad-lab/nomad-test-keycloak:v1.0
+    image: quay.io/keycloak/keycloak:24.0.0
     platform: linux/amd64
     container_name: keycloak
     environment:
-      # clashes with imported admin user in master realm
-      # - KC_BOOTSTRAP_ADMIN_USERNAME=admin
-      # - KC_BOOTSTRAP_ADMIN_PASSWORD=password
       - KC_LOG_LEVEL=info
       - KC_HOSTNAME_DEBUG=true
       - KC_METRICS_ENABLED=true
       - KC_HEALTH_ENABLED=true
+      - KC_BOOTSTRAP_ADMIN_USERNAME=admin
+      - KC_BOOTSTRAP_ADMIN_PASSWORD=password
     command:
       - start-dev
-      - --import-realm
-      - --verbose
     ports:
       - 8080:8080
     healthcheck:
@@ -89,7 +86,7 @@ services:
       timeout: 10s
       retries: 5
       start_period: 30s
-      test: bash /opt/keycloak/bin/healthcheck_keycloak.sh || exit 1
+      test: ["CMD", "curl", "--fail", "http://localhost:8080/health"]
 
   temporal:
     container_name: nomad_temporal

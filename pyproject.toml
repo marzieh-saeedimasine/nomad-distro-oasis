@@ -45,6 +45,7 @@ plugins = [
   #"pynxtools-spm>=0.2.1",
   #"pynxtools-xps>=0.5.4",
   #"pynxtools-xrd>=0.0.7",
+  "nomad-plugin @ git+https://github.com/marzieh-saeedimasine/nomad-plugin.git@1ae9531c565722b50da68ff14db5b23a7172d218",
   "nomad-schema-plugin-run>=1.0.1",
   "nomad-schema-plugin-simulation-workflow>=1.0.1",
   "nomad-normalizer-plugin-bandstructure>=1.0",
