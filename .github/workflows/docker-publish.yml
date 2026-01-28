@@ -32,6 +32,8 @@ env:
     pynxtools_igor
     electronicparsers
     nomad_simulations
+    bandstructurenormalizer
+    dosnormalizer
 
 permissions:
   contents: write
