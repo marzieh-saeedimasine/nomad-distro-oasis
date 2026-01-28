@@ -67,26 +67,29 @@ services:
       start_period: 10s
 
   keycloak:
-    image: quay.io/keycloak/keycloak:24.0.0
+    image: gitlab-registry.mpcdf.mpg.de/nomad-lab/nomad-test-keycloak:v1.0
     platform: linux/amd64
     container_name: keycloak
     environment:
+      # clashes with imported admin user in master realm
+      # - KC_BOOTSTRAP_ADMIN_USERNAME=admin
+      # - KC_BOOTSTRAP_ADMIN_PASSWORD=password
       - KC_LOG_LEVEL=info
       - KC_HOSTNAME_DEBUG=true
       - KC_METRICS_ENABLED=true
       - KC_HEALTH_ENABLED=true
-      - KC_BOOTSTRAP_ADMIN_USERNAME=admin
-      - KC_BOOTSTRAP_ADMIN_PASSWORD=password
     command:
       - start-dev
+      - --import-realm
+      - --verbose
     ports:
-      - 8080:8080
+      - 80:80
     healthcheck:
       interval: 10s
       timeout: 10s
       retries: 5
       start_period: 30s
-      test: ["CMD", "curl", "--fail", "http://localhost:8080/health"]
+      test: bash /opt/keycloak/bin/healthcheck_keycloak.sh || exit 1
 
   temporal:
     container_name: nomad_temporal
@@ -144,14 +147,14 @@ services:
     volumes:
       - ./nomad.yaml:/app/nomad.yaml
     ports:
-      - 8000:8000
+      - 80:80
     healthcheck:
       test:
         - "CMD"
         - "curl"
         - "--fail"
         - "--silent"
-        - "http://localhost:8000/-/health"
+        - "http://localhost:80/-/health"
       interval: 10s
       timeout: 10s
       retries: 60
@@ -163,14 +166,14 @@ services:
     platform: linux/amd64
     container_name: jupyter
     ports:
-      - 8888:8888
+      - 80:80
     healthcheck:
       test:
         - "CMD"
         - "curl"
         - "--fail"
         - "--silent"
-        - "http://localhost:8888/"
+        - "http://localhost:80/"
       interval: 10s
       timeout: 10s
       retries: 30
