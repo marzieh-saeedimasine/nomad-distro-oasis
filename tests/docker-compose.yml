@@ -83,7 +83,7 @@ services:
       - --import-realm
       - --verbose
     ports:
-      - 80:80
+      - 8080:80
     healthcheck:
       interval: 10s
       timeout: 10s
@@ -147,7 +147,7 @@ services:
     volumes:
       - ./nomad.yaml:/app/nomad.yaml
     ports:
-      - 80:80
+      - 8000:80
     healthcheck:
       test:
         - "CMD"
